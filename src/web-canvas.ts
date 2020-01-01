@@ -12,6 +12,11 @@ export class WebCanvas extends LitElement {
   @property() canvas: HTMLCanvasElement;
   @property() canvasContext: CanvasRenderingContext2D;
 
+  @property() drawing: boolean;
+
+  mousePos: { x: number, y: number };
+  lastPos: { x: number, y: number };
+
   firstUpdated() {
     this.setupCanvas();
   }
@@ -41,6 +46,18 @@ export class WebCanvas extends LitElement {
     } else {
       console.log('Low latency canvas not supported. Boo!');
     }
+
+    this.setupDrawingEvents();
+  }
+
+  setupDrawingEvents() {
+    this.drawing = false;
+
+    this.mousePos = { x: 0, y: 0 };
+
+    this.canvas.addEventListener("pointerdown", (e) => {
+      console.log(e);
+    })
   }
 
   render() {
