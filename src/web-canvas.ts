@@ -10,7 +10,6 @@ export class WebCanvas extends LitElement {
   @property() color: string = 'red';
   @property() mode: string = 'pen';
 
-
   @property() canvas: HTMLCanvasElement;
   @property() canvasContext: CanvasRenderingContext2D;
 
@@ -101,6 +100,14 @@ export class WebCanvas extends LitElement {
     };
   }
 
+  erase() {
+    this.mode = "erase";
+  }
+
+  pen() {
+    this.mode = "pen";
+  }
+
   renderCanvas() {
     if (this.drawing !== false && this.mode === 'pen') {
 
@@ -171,7 +178,8 @@ export class WebCanvas extends LitElement {
         ${
           this.showcontrols ? html `
           <div id="controls">
-            <button>erase</button>
+            <button  @click="${this.pen}">pen</button>
+            <button  @click="${this.erase}">erase</button>
           </div>` : null
         }
       </div>
