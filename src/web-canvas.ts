@@ -5,21 +5,30 @@ import {
 @customElement('web-canvas')
 export class WebCanvas extends LitElement {
 
-  @property() height: number;
-  @property() width: number;
-  @property() color: string = 'red';
-  @property() mode: string = 'pen';
+  @property({ type: Number }) height: number;
+  @property({ type: Number }) width: number;
+  @property({ type: String }) color: string;
+  @property({ type: Array }) colors: any[];
+  @property({ type: String }) mode: string = 'pen';
 
   @property() canvas: HTMLCanvasElement;
   @property() canvasContext: CanvasRenderingContext2D;
 
-  @property({type : Boolean}) drawing: boolean = true;
+  @property({ type: Boolean }) drawing: boolean = true;
 
-  @property({type : Boolean}) showcontrols: boolean = false;
+  @property({ type: Boolean }) showcontrols: boolean = false;
 
   mousePos: any;
   lastPos: any;
   rect: DOMRect;
+
+  constructor() {
+    super();
+
+    this.colors = ['red', 'black', 'green', 'blue'];
+
+    this.color = 'red';
+  }
 
   firstUpdated() {
     this.setupCanvas();
@@ -108,8 +117,17 @@ export class WebCanvas extends LitElement {
     this.mode = "pen";
   }
 
+  changeColor(color: string) {
+    console.log(color);
+    this.color = color;
+  }
+
   renderCanvas() {
     if (this.drawing !== false && this.mode === 'pen') {
+
+      if (this.color) {
+        this.canvasContext.strokeStyle = this.color;
+      }
 
       if (this.lastPos) {
         this.canvasContext.globalCompositeOperation = 'source-over';
@@ -176,12 +194,25 @@ export class WebCanvas extends LitElement {
         <canvas></canvas>
 
         ${
-          this.showcontrols ? html `
+      this.showcontrols ? html`
           <div id="controls">
-            <button  @click="${this.pen}">pen</button>
-            <button  @click="${this.erase}">erase</button>
+
+            <div id="penControls">
+              <button  @click="${this.pen}">pen</button>
+              <button  @click="${this.erase}">erase</button>
+            </div>
+
+            <div id="colors">
+              ${
+                this.colors.map((color) => {
+                  return html`
+                    <button @click="${() => this.changeColor(color)}">${color}</button>
+                  `
+                })
+              }
+            </div>
           </div>` : null
-        }
+      }
       </div>
     `;
   }
